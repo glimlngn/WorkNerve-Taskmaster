@@ -1,6 +1,6 @@
 # Other gitignores
 selenium_profile
-worknerve_tasks_aug3_aug4.xlsx
+test_file.xlsx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
