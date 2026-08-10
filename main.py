@@ -27,8 +27,6 @@ input_element.send_keys(Keys.ENTER)
 time.sleep(1)
 actions.send_keys(Keys.TAB * 13).perform()
 
-# input('BREAKPOINT: press ENTER to continue.')
-
 # Get task list from Excel file
 path = 'test_file.xlsx'
 task_list = pd.read_excel(path)
@@ -38,28 +36,28 @@ actions.send_keys(Keys.ENTER).perform()
 actions.send_keys(Keys.TAB * 5).perform()
 
 # TODO: Loop through all tasks in the Excel file
-task_index = 8
+task_index = 1
 # Input Task Data
 # Service Line
 actions.send_keys(task_list.iloc[task_index]['service_line']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
 # Category
 actions.send_keys(task_list.iloc[task_index]['category']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
 # Sub-category
 actions.send_keys(task_list.iloc[task_index]['subcategory']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
 # Project/Program/Managed Service (for manual input)
 with_oppo = task_list.iloc[task_index]['with_oppo']
 if(with_oppo == 'Yes'):
-    actions.send_keys('').perform()
-    time.sleep(0.3)
+    actions.send_keys(' ').perform()
+    time.sleep(0.5)
     actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 elif(with_oppo == 'Sometimes'): 
     actions.send_keys(Keys.TAB).perform()
@@ -68,23 +66,28 @@ elif(with_oppo == 'No'):
 
 # Task Title
 actions.send_keys(task_list.iloc[task_index]['task_title']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
 # Description
 actions.send_keys(task_list.iloc[task_index]['description']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
-# TODO: automate Priority selection
+# Priority
+priority = task_list.iloc[task_index]['priority']
+if(priority == 'Low'):
+    actions.send_keys(Keys.ENTER, Keys.ARROW_UP, Keys.ENTER).perform()
+elif(priority == 'High'):
+    actions.send_keys(Keys.ENTER, Keys.ARROW_DOWN, Keys.ENTER).perform()
+elif(priority == 'Urgent'): 
+    actions.send_keys(Keys.ENTER, Keys.ARROW_DOWN, Keys.ARROW_DOWN, Keys.ENTER).perform()
+    pass
 actions.send_keys(Keys.TAB).perform()
-# actions.send_keys(task_list.iloc[task_index]['priority']).perform()
-# time.sleep(0.3)
-# actions.send_keys(Keys.ARROW_DOWN, Keys.ENTER, Keys.TAB).perform()
 
 # Estimated Hours
 actions.send_keys(task_list.iloc[task_index]['estimated_hours']).perform()
-time.sleep(0.3)
+time.sleep(0.5)
 actions.send_keys(Keys.ENTER).perform()
 actions.send_keys(Keys.ENTER, Keys.TAB, Keys.TAB).perform()
 
