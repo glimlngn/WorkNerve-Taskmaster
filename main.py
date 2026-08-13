@@ -18,25 +18,37 @@ options.add_argument("--disable-blink-features=AutomationControlled")
 driver = webdriver.Chrome(options=options)
 actions = ActionChains(driver)
 driver.get(WORKNERVE_URL)
-
-# Assuming auth retented, go to 'My Tasks' and hover on the '+ Add Task' button.
+time.sleep(3)
 actions.send_keys(Keys.TAB * 3).send_keys(Keys.ENTER).perform()
-time.sleep(5)
+time.sleep(3)
+
+input('Login Debug. Please press ENTER to continue. ')
+
 input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
 input_element.send_keys(Keys.ENTER)
-time.sleep(3)
+
+input('Please select a date, and press ENTER to start adding tasks. ')
+
+# Assuming auth retented, go to 'My Tasks' and hover on the '+ Add Task' button.
+# input('BREAKPOINT: press ENTER to continue. ')
+input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
+input_element.send_keys(Keys.ENTER)
+time.sleep(0.5)
 actions.send_keys(Keys.TAB * 13).perform()
+time.sleep(0.5)
 
 # Get task list from Excel file
-path = 'test_file.xlsx'
+# path = "C:/Users/TOG-PH/OneDrive - Tech One Global Singapore Pte. Ltd/Documents/Copilot/Created/WorkNerve_Tasks_20260731 5.xlsx"
+path = "test_file.xlsx"
 task_list = pd.read_excel(path)
 
 # Input Task Data
-for index, task in task_list.iterrows(): 
+for _, task in task_list.iterrows(): 
     # Press '+ Add Task' and move to Service Line
     actions.send_keys(Keys.ENTER).perform()
+    time.sleep(0.5)
     actions.send_keys(Keys.TAB * 5).perform()
-
+    time.sleep(0.5)
     # Service Line
     actions.send_keys(task['service_line']).perform()
     time.sleep(0.5)
@@ -85,7 +97,7 @@ for index, task in task_list.iterrows():
     actions.send_keys(Keys.TAB).perform()
 
     # Estimated Hours
-    actions.send_keys(task['estimated_hours']).perform()
+    actions.send_keys(str(task['estimated_hours'])).perform()
     time.sleep(0.5)
     actions.send_keys(Keys.ENTER).perform()
     actions.send_keys(Keys.ENTER, Keys.TAB, Keys.TAB).perform()
@@ -94,6 +106,28 @@ for index, task in task_list.iterrows():
     actions.send_keys(Keys.ENTER).perform()
     time.sleep(3)
 
-input('BREAKPOINT: press ENTER to continue. ')
+input('Task tracking done. After selecting OPPO, please press ENTER to log time. ')
+
+added_tabs = 0 # increments by 4 per iteration, to go through the tasks
+log_ctr = 0 # after 5 tasks logged, prompt user to turn to next page
+for idx in reversed(task_list.index): # iterates in reverse. in logging hours, FI-LO
+    if log_ctr % 5 == 0:
+        added_tabs = 0
+        input('All tasks logged for this page (or this is the first page lol). Please go to the next page. ')
+    input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
+    input_element.send_keys(Keys.ENTER)
+    time.sleep(0.5)
+    actions.send_keys(Keys.TAB * 16 + Keys.TAB * added_tabs, Keys.ENTER).perform()
+    time.sleep(0.5)
+    actions.send_keys(Keys.TAB * 2).perform()
+    time.sleep(0.5)
+    actions.send_keys(str(task_list.loc[idx]['estimated_hours'])).perform()
+    time.sleep(0.5)
+    actions.send_keys(Keys.TAB * 3).send_keys(Keys.ENTER).perform()
+    time.sleep(0.5)
+    added_tabs += 4
+    log_ctr += 1
+
+input('Hour logging done. Please press ENTER to exit. ')
 
 driver.quit()

@@ -1,6 +1,9 @@
 # Other gitignores
 selenium_profile
+wafw00f
 test_file.xlsx
+.venv-1
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
