@@ -22,7 +22,7 @@ time.sleep(3)
 actions.send_keys(Keys.TAB * 3).send_keys(Keys.ENTER).perform()
 time.sleep(3)
 
-input('Login Debug. Please press ENTER to continue. ')
+input('Have you logged-in? Please press ENTER to continue. ')
 
 input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
 input_element.send_keys(Keys.ENTER)
@@ -38,7 +38,7 @@ actions.send_keys(Keys.TAB * 13).perform()
 time.sleep(0.5)
 
 # Get task list from Excel file
-# path = "C:/Users/TOG-PH/OneDrive - Tech One Global Singapore Pte. Ltd/Documents/Copilot/Created/WorkNerve_Tasks_20260731 5.xlsx"
+# path = "C:/Users/TOG-PH/OneDrive - Tech One Global Singapore Pte. Ltd/Documents/Copilot/Created/WorkNerve_Tasks_20260814.xlsx"
 path = "test_file.xlsx"
 task_list = pd.read_excel(path)
 
@@ -104,10 +104,11 @@ for _, task in task_list.iterrows():
 
     # Add Task to WorkNerve
     actions.send_keys(Keys.ENTER).perform()
-    time.sleep(3)
+    time.sleep(2)
 
 input('Task tracking done. After selecting OPPO, please press ENTER to log time. ')
 
+# Log Hours
 added_tabs = 0 # increments by 4 per iteration, to go through the tasks
 log_ctr = 0 # after 5 tasks logged, prompt user to turn to next page
 for idx in reversed(task_list.index): # iterates in reverse. in logging hours, FI-LO
@@ -117,7 +118,7 @@ for idx in reversed(task_list.index): # iterates in reverse. in logging hours, F
     input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
     input_element.send_keys(Keys.ENTER)
     time.sleep(0.5)
-    actions.send_keys(Keys.TAB * 16 + Keys.TAB * added_tabs, Keys.ENTER).perform()
+    actions.send_keys(Keys.TAB * 16, Keys.TAB * added_tabs, Keys.ENTER).perform()
     time.sleep(0.5)
     actions.send_keys(Keys.TAB * 2).perform()
     time.sleep(0.5)
@@ -128,6 +129,24 @@ for idx in reversed(task_list.index): # iterates in reverse. in logging hours, F
     added_tabs += 4
     log_ctr += 1
 
-input('Hour logging done. Please press ENTER to exit. ')
+# Complete Tasks
+added_tabs = 0 # increments by 4 per iteration, to go through the tasks
+log_ctr = 0 # after 5 tasks logged, prompt user to turn to next page
+input('Hour logging done. Please press ENTER to complete tasks. ')
+for _, task in task_list.iterrows(): 
+    if log_ctr % 5 == 0:
+        added_tabs = 0
+        input('All tasks completed for this page (or this is the first page lol). Please go to the next page. ')
+    input_element = driver.find_element(By.CSS_SELECTOR, "[aria-label='My Tasks']")
+    input_element.send_keys(Keys.ENTER)
+    time.sleep(0.5)
+    actions.send_keys(Keys.TAB * 15, Keys.TAB * added_tabs, Keys.ENTER).perform()
+    time.sleep(0.5)
+    actions.send_keys(Keys.TAB * 6, Keys.ENTER).perform()
+    time.sleep(0.5)
+    added_tabs += 1
+    log_ctr += 1
 
+input('WorkNerve Taskmaster done. Please press ENTER to close the browser. ')
+    
 driver.quit()
